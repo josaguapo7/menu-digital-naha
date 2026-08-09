@@ -1,1 +1,49 @@
-<h1>hola</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f1e8">
+  <title>Nahá Bar | Menú Digital</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #f5f1e8;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 18px 0 30px;
+    }
+    .menu {
+      width: min(100%, 900px);
+    }
+    .menu img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0 auto 14px;
+    }
+    @media (max-width: 600px) {
+      body { padding: 0 0 20px; }
+      .menu img {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="menu" aria-label="Menú digital de Nahá Bar">
+    <img src="1.jpeg" alt="Menú Nahá Bar - Sabores Regionales" loading="eager">
+    <img src="2.jpeg" alt="Menú Nahá Bar - Mocktails y Bocaditos del Comal" loading="lazy">
+    <img src="3.jpeg" alt="Menú Nahá Bar - Sabor de Estación Primavera" loading="lazy">
+    <img src="4.jpeg" alt="Menú Nahá Bar - Sabor de Estación Verano" loading="lazy">
+    <img src="5.jpeg" alt="Menú Nahá Bar - Sabor de Estación Otoño" loading="lazy">
+    <img src="6.jpeg" alt="Menú Nahá Bar - Sabor de Estación Invierno" loading="lazy">
+  </main>
+</body>
+</html>
