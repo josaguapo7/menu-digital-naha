@@ -1,49 +1,806 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f5f1e8">
+
   <title>Nahá Bar | Menú Digital</title>
+
+  <!-- Tipografías -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    * { box-sizing: border-box; }
-    html, body {
+
+    /* =========================
+       CONFIGURACIÓN GENERAL
+    ========================= */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
       margin: 0;
       padding: 0;
+
+      background:
+        radial-gradient(
+          circle at 50% 0%,
+          rgba(255,255,255,.7),
+          transparent 35%
+        ),
+        #f5f1e8;
+
+      color: #29251f;
+
+      font-family: "Montserrat", sans-serif;
+
+      overflow-x: hidden;
+    }
+
+
+    /* =========================
+       BARRA SUPERIOR
+    ========================= */
+
+    .welcome-bar {
+
+      position: fixed;
+
+      top: 0;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: min(92%, 680px);
+
+      z-index: 1000;
+
+      padding: 12px 22px;
+
+      text-align: center;
+
+      background: rgba(245,241,232,.88);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+
+      border-radius: 0 0 18px 18px;
+
+      box-shadow:
+        0 8px 30px rgba(70,55,35,.10);
+
+      animation: bannerAppear 1.2s ease forwards;
+    }
+
+
+    .welcome-small {
+
+      display: block;
+
+      font-size: 9px;
+
+      letter-spacing: 4px;
+
+      text-transform: uppercase;
+
+      color: #87765d;
+
+      margin-bottom: 2px;
+    }
+
+
+    .welcome-title {
+
+      margin: 0;
+
+      font-family: "Cormorant Garamond", serif;
+
+      font-size: clamp(28px, 5vw, 42px);
+
+      font-weight: 600;
+
+      line-height: .9;
+
+      letter-spacing: 1px;
+
+      color: #3a3024;
+    }
+
+
+    .welcome-title span {
+
+      font-style: italic;
+
+      font-weight: 400;
+    }
+
+
+    .welcome-line {
+
+      width: 42px;
+
+      height: 1px;
+
+      margin: 8px auto 0;
+
+      background: #a8926d;
+
+      position: relative;
+    }
+
+
+    .welcome-line::before,
+    .welcome-line::after {
+
+      content: "";
+
+      position: absolute;
+
+      top: 50%;
+
+      width: 4px;
+
+      height: 4px;
+
+      border-radius: 50%;
+
+      background: #a8926d;
+
+      transform: translateY(-50%);
+    }
+
+
+    .welcome-line::before {
+      left: -9px;
+    }
+
+    .welcome-line::after {
+      right: -9px;
+    }
+
+
+    /* =========================
+       INDICADOR SCROLL
+    ========================= */
+
+    .scroll-indicator {
+
+      position: fixed;
+
+      right: 22px;
+      bottom: 25px;
+
+      z-index: 900;
+
+      width: 42px;
+      height: 42px;
+
+      border: 1px solid rgba(92,75,50,.20);
+
+      border-radius: 50%;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(245,241,232,.72);
+
+      backdrop-filter: blur(8px);
+
+      animation: floating 2.5s ease-in-out infinite;
+
+      transition: .3s;
+    }
+
+
+    .scroll-indicator::after {
+
+      content: "↓";
+
+      font-size: 17px;
+
+      color: #756249;
+    }
+
+
+    /* =========================
+       CONTENEDOR DEL MENÚ
+    ========================= */
+
+    .menu {
+
+      width: min(100%, 900px);
+
+      margin: 0 auto;
+
+      padding: 125px 18px 50px;
+
+      position: relative;
+    }
+
+
+    /* =========================
+       TARJETAS / PÁGINAS
+    ========================= */
+
+    .menu-page {
+
+      position: relative;
+
+      margin-bottom: 22px;
+
+      opacity: 0;
+
+      transform: translateY(45px) scale(.985);
+
+      transition:
+        opacity 1s ease,
+        transform 1s cubic-bezier(.2,.7,.2,1);
+
+      border-radius: 5px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 18px 45px rgba(68,54,36,.10);
+
       background: #f5f1e8;
     }
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 18px 0 30px;
+
+
+    .menu-page.visible {
+
+      opacity: 1;
+
+      transform:
+        translateY(0)
+        scale(1);
     }
-    .menu {
-      width: min(100%, 900px);
-    }
-    .menu img {
+
+
+    .menu-page img {
+
       display: block;
+
       width: 100%;
+
       height: auto;
-      margin: 0 auto 14px;
+
+      margin: 0;
+
+      border-radius: inherit;
     }
-    @media (max-width: 600px) {
-      body { padding: 0 0 20px; }
-      .menu img {
-        width: 100%;
-        margin-bottom: 8px;
+
+
+    /* =========================
+       DESTELLOS
+    ========================= */
+
+    .sparkles {
+
+      position: fixed;
+
+      inset: 0;
+
+      pointer-events: none;
+
+      z-index: 50;
+
+      overflow: hidden;
+    }
+
+
+    .sparkle {
+
+      position: absolute;
+
+      width: 3px;
+      height: 3px;
+
+      background: rgba(146,121,82,.55);
+
+      border-radius: 50%;
+
+      opacity: 0;
+
+      animation:
+        sparkleAnimation
+        var(--duration)
+        ease-in-out
+        infinite;
+
+      animation-delay: var(--delay);
+
+      box-shadow:
+        0 0 5px rgba(169,141,95,.35);
+    }
+
+
+    .sparkle::before,
+    .sparkle::after {
+
+      content: "";
+
+      position: absolute;
+
+      left: 50%;
+      top: 50%;
+
+      transform: translate(-50%, -50%);
+
+      background: rgba(169,141,95,.35);
+    }
+
+
+    .sparkle::before {
+
+      width: 1px;
+      height: 10px;
+    }
+
+
+    .sparkle::after {
+
+      width: 10px;
+      height: 1px;
+    }
+
+
+    /* =========================
+       SEPARADORES
+    ========================= */
+
+    .menu-page::after {
+
+      content: "";
+
+      position: absolute;
+
+      bottom: -12px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: 55px;
+
+      height: 1px;
+
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          #b3a184,
+          transparent
+        );
+
+      opacity: .45;
+    }
+
+
+    /* =========================
+       ANIMACIONES
+    ========================= */
+
+    @keyframes bannerAppear {
+
+      from {
+
+        opacity: 0;
+
+        transform:
+          translate(-50%, -25px);
+      }
+
+      to {
+
+        opacity: 1;
+
+        transform:
+          translate(-50%, 0);
       }
     }
+
+
+    @keyframes sparkleAnimation {
+
+      0% {
+
+        opacity: 0;
+
+        transform: scale(.4);
+      }
+
+      35% {
+
+        opacity: .7;
+
+        transform: scale(1);
+      }
+
+      65% {
+
+        opacity: .25;
+
+        transform: scale(.7);
+      }
+
+      100% {
+
+        opacity: 0;
+
+        transform: scale(.3);
+      }
+    }
+
+
+    @keyframes floating {
+
+      0%,
+      100% {
+
+        transform:
+          translateY(0);
+      }
+
+      50% {
+
+        transform:
+          translateY(-7px);
+      }
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 600px) {
+
+      body {
+        background: #f5f1e8;
+      }
+
+
+      .welcome-bar {
+
+        width: 100%;
+
+        border-radius: 0;
+
+        padding:
+          10px 15px 11px;
+      }
+
+
+      .welcome-small {
+
+        font-size: 7px;
+
+        letter-spacing: 3px;
+      }
+
+
+      .welcome-title {
+
+        font-size: 30px;
+      }
+
+
+      .welcome-line {
+
+        margin-top: 6px;
+      }
+
+
+      .menu {
+
+        width: 100%;
+
+        padding:
+          92px 0 30px;
+      }
+
+
+      .menu-page {
+
+        margin-bottom: 9px;
+
+        border-radius: 0;
+
+        box-shadow:
+          0 8px 25px rgba(68,54,36,.07);
+      }
+
+
+      .menu-page::after {
+
+        bottom: -5px;
+
+        width: 35px;
+      }
+
+
+      .scroll-indicator {
+
+        right: 14px;
+
+        bottom: 16px;
+
+        width: 36px;
+        height: 36px;
+      }
+
+
+      .scroll-indicator::after {
+
+        font-size: 15px;
+      }
+
+    }
+
+
+    /* =========================
+       REDUCCIÓN DE MOVIMIENTO
+    ========================= */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+
+        animation-duration: .01ms !important;
+
+        animation-iteration-count: 1 !important;
+
+        transition-duration: .01ms !important;
+      }
+    }
+
   </style>
 </head>
+
+
 <body>
-  <main class="menu" aria-label="Menú digital de Nahá Bar">
-    <img src="1.jpeg" alt="Menú Nahá Bar - Sabores Regionales" loading="eager">
-    <img src="2.jpeg" alt="Menú Nahá Bar - Mocktails y Bocaditos del Comal" loading="lazy">
-    <img src="3.jpeg" alt="Menú Nahá Bar - Sabor de Estación Primavera" loading="lazy">
-    <img src="4.jpeg" alt="Menú Nahá Bar - Sabor de Estación Verano" loading="lazy">
-    <img src="5.jpeg" alt="Menú Nahá Bar - Sabor de Estación Otoño" loading="lazy">
-    <img src="6.jpeg" alt="Menú Nahá Bar - Sabor de Estación Invierno" loading="lazy">
+
+
+  <!-- =========================
+       BANNER DE BIENVENIDA
+  ========================= -->
+
+  <header class="welcome-bar">
+
+    <span class="welcome-small">
+      Sabores · Experiencias · Momentos
+    </span>
+
+    <h1 class="welcome-title">
+      Bienvenido a <span>Nahá</span>
+    </h1>
+
+    <div class="welcome-line"></div>
+
+  </header>
+
+
+  <!-- =========================
+       DESTELLOS
+  ========================= -->
+
+  <div class="sparkles" aria-hidden="true">
+
+    <span class="sparkle"
+      style="left:8%; top:17%; --duration:5s; --delay:1s;"></span>
+
+    <span class="sparkle"
+      style="left:18%; top:43%; --duration:6s; --delay:2s;"></span>
+
+    <span class="sparkle"
+      style="left:31%; top:25%; --duration:4.5s; --delay:.5s;"></span>
+
+    <span class="sparkle"
+      style="left:47%; top:70%; --duration:6.5s; --delay:3s;"></span>
+
+    <span class="sparkle"
+      style="left:63%; top:19%; --duration:5.5s; --delay:1.8s;"></span>
+
+    <span class="sparkle"
+      style="left:76%; top:48%; --duration:4s; --delay:.8s;"></span>
+
+    <span class="sparkle"
+      style="left:89%; top:30%; --duration:6s; --delay:2.5s;"></span>
+
+    <span class="sparkle"
+      style="left:93%; top:78%; --duration:5s; --delay:1.2s;"></span>
+
+    <span class="sparkle"
+      style="left:12%; top:82%; --duration:7s; --delay:4s;"></span>
+
+    <span class="sparkle"
+      style="left:55%; top:38%; --duration:5s; --delay:2s;"></span>
+
+  </div>
+
+
+  <!-- =========================
+       MENÚ
+  ========================= -->
+
+  <main
+    class="menu"
+    aria-label="Menú digital de Nahá Bar"
+  >
+
+
+    <section class="menu-page">
+
+      <img
+        src="1.jpeg"
+        alt="Menú Nahá Bar - Sabores Regionales"
+        loading="eager"
+      >
+
+    </section>
+
+
+    <section class="menu-page">
+
+      <img
+        src="2.jpeg"
+        alt="Menú Nahá Bar - Mocktails y Bocaditos del Comal"
+        loading="lazy"
+      >
+
+    </section>
+
+
+    <section class="menu-page">
+
+      <img
+        src="3.jpeg"
+        alt="Menú Nahá Bar - Sabor de Estación Primavera"
+        loading="lazy"
+      >
+
+    </section>
+
+
+    <section class="menu-page">
+
+      <img
+        src="4.jpeg"
+        alt="Menú Nahá Bar - Sabor de Estación Verano"
+        loading="lazy"
+      >
+
+    </section>
+
+
+    <section class="menu-page">
+
+      <img
+        src="5.jpeg"
+        alt="Menú Nahá Bar - Sabor de Estación Otoño"
+        loading="lazy"
+      >
+
+    </section>
+
+
+    <section class="menu-page">
+
+      <img
+        src="6.jpeg"
+        alt="Menú Nahá Bar - Sabor de Estación Invierno"
+        loading="lazy"
+      >
+
+    </section>
+
+
   </main>
+
+
+  <!-- =========================
+       INDICADOR
+  ========================= -->
+
+  <div
+    class="scroll-indicator"
+    aria-hidden="true"
+  ></div>
+
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================= -->
+
+  <script>
+
+    /*
+     * Animación de aparición
+     * de cada página del menú
+     */
+
+    const pages =
+      document.querySelectorAll(".menu-page");
+
+
+    const observer =
+      new IntersectionObserver(
+
+        (entries) => {
+
+          entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+              entry.target.classList.add("visible");
+
+            }
+
+          });
+
+        },
+
+        {
+          threshold: 0.12
+        }
+
+      );
+
+
+    pages.forEach(page => {
+
+      observer.observe(page);
+
+    });
+
+
+    /*
+     * Ocultar indicador
+     * cuando el usuario empieza
+     * a desplazarse
+     */
+
+    const scrollIndicator =
+      document.querySelector(".scroll-indicator");
+
+
+    window.addEventListener("scroll", () => {
+
+      if (window.scrollY > 120) {
+
+        scrollIndicator.style.opacity = "0";
+
+      } else {
+
+        scrollIndicator.style.opacity = "1";
+
+      }
+
+    });
+
+
+  </script>
+
+
 </body>
 </html>
+```
